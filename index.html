@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRUTAL HONESTY BOT — LinkedIn Roaster</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --red: #ff2d20;
+    --yellow: #ffe135;
+    --gray: #1a1a1a;
+    --mid: #2a2a2a;
+    --dim: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ---- SCREEN SYSTEM ---- */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ---- LANDING ---- */
+  #landing {
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  .ticker {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--red);
+    padding: 6px 0;
+    overflow: hidden;
+    z-index: 100;
+  }
+  .ticker-inner {
+    display: flex;
+    gap: 80px;
+    white-space: nowrap;
+    animation: ticker 18s linear infinite;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--black);
+    font-weight: 700;
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .landing-center {
+    max-width: 720px;
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 4px 12px;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 12vw, 120px);
+    line-height: 0.9;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  h1 .line1 { display: block; color: var(--white); }
+  h1 .line2 { display: block; color: var(--yellow); -webkit-text-stroke: 2px var(--yellow); }
+  h1 .line3 { display: block; color: var(--white); }
+
+  .subhead {
+    font-size: 16px;
+    color: var(--dim);
+    margin: 20px 0 40px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+  .subhead strong { color: var(--white); font-weight: 500; }
+
+  /* DROP ZONE */
+  #dropzone {
+    border: 2px dashed #444;
+    border-radius: 4px;
+    padding: 48px 32px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: var(--gray);
+    margin-bottom: 24px;
+  }
+  #dropzone:hover, #dropzone.drag-over {
+    border-color: var(--yellow);
+    background: #1f1e00;
+  }
+  #dropzone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .drop-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .drop-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--dim);
+  }
+  .drop-label span { color: var(--yellow); }
+
+  #preview-wrap {
+    display: none;
+    margin-bottom: 16px;
+  }
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--dim);
+  }
+  .preview-header span { color: var(--yellow); }
+  #preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .preview-item {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 2px solid #333;
+    background: var(--gray);
+  }
+  .preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .preview-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--red);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #clear-all-btn {
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--dim);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  #clear-all-btn:hover { border-color: var(--white); color: var(--white); }
+  #dropzone.hidden { display: none; }
+
+  #roast-btn {
+    width: 100%;
+    padding: 20px;
+    background: var(--red);
+    border: none;
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  #roast-btn:hover { background: #e0251a; transform: translateY(-2px); }
+  #roast-btn:active { transform: translateY(0); }
+  #roast-btn:disabled { background: #444; cursor: not-allowed; transform: none; }
+
+  .disclaimer {
+    font-size: 11px;
+    color: #555;
+    font-family: 'Space Mono', monospace;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  /* ---- LOADING ---- */
+  #loading {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .loading-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, #1a0000 0%, var(--black) 70%);
+  }
+
+  .loading-content { position: relative; z-index: 1; max-width: 600px; }
+
+  .spinner-ring {
+    width: 80px; height: 80px;
+    border: 3px solid #333;
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 40px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 4px;
+    color: var(--red);
+    margin-bottom: 32px;
+  }
+
+  #thought-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--dim);
+    min-height: 60px;
+    line-height: 1.8;
+    padding: 0 20px;
+    transition: opacity 0.4s;
+  }
+  #thought-text em { color: var(--white); font-style: italic; }
+
+  .progress-bar {
+    width: 100%;
+    height: 2px;
+    background: #222;
+    margin-top: 40px;
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--red);
+    width: 0%;
+    animation: progress 6s ease-in-out forwards;
+  }
+  @keyframes progress { 0%{width:0%} 80%{width:85%} 100%{width:90%} }
+
+  /* ---- RESULTS ---- */
+  #results {
+    padding: 80px 20px 60px;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .overall-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 15vw, 140px);
+    line-height: 1;
+    display: block;
+  }
+  .score-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 20px;
+  }
+  .verdict-box {
+    background: var(--gray);
+    border-left: 4px solid var(--red);
+    padding: 20px 24px;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 600px;
+  }
+  .verdict-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  .verdict-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--white);
+  }
+
+  /* CATEGORY CARDS */
+  .categories { display: flex; flex-direction: column; gap: 2px; margin: 40px 0; }
+
+  .cat-card {
+    background: var(--gray);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .cat-card:hover { background: var(--mid); }
+
+  .cat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .cat-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+
+  .cat-score-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cat-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+  }
+
+  .score-bar {
+    flex: 1;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    overflow: hidden;
+    max-width: 200px;
+  }
+  .score-fill {
+    height: 100%;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .cat-roast {
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.5;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  .cat-fix {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px;
+    background: rgba(255,225,53,0.06);
+    border-left: 2px solid var(--yellow);
+  }
+  .fix-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .fix-text {
+    font-size: 13px;
+    color: var(--yellow);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .cta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .btn-share {
+    flex: 1;
+    min-width: 200px;
+    padding: 16px 24px;
+    background: var(--yellow);
+    border: none;
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-share:hover { transform: translateY(-2px); }
+  .btn-retry {
+    flex: 1;
+    min-width: 200px;
+    padding: 16px 24px;
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--dim);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-retry:hover { border-color: var(--white); color: var(--white); }
+
+  /* SCORE COLOR */
+  .score-terrible { color: var(--red); }
+  .score-bad { color: #ff7b00; }
+  .score-mid { color: var(--yellow); }
+  .score-ok { color: #a8e63d; }
+  .score-good { color: #4ade80; }
+
+  .fill-terrible { background: var(--red); }
+  .fill-bad { background: #ff7b00; }
+  .fill-mid { background: var(--yellow); }
+  .fill-ok { background: #a8e63d; }
+  .fill-good { background: #4ade80; }
+
+  /* share toast */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--yellow);
+    color: var(--black);
+    padding: 12px 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    transition: transform 0.3s;
+    z-index: 1000;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    .cta-row { flex-direction: column; }
+    .cat-score-wrap { flex-direction: column; align-items: flex-end; gap: 4px; }
+    .score-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner"></div>
+</div>
+
+<!-- ===================== LANDING ===================== -->
+<div class="screen active" id="landing">
+  <div class="landing-center">
+    <div class="tag">⚠ Career Intervention Service</div>
+    <h1>
+      <span class="line1">BRUTAL</span>
+      <span class="line2">HONESTY</span>
+      <span class="line3">BOT</span>
+    </h1>
+    <p class="subhead">
+      Your LinkedIn profile is <strong>not as good as you think.</strong><br>
+      Upload up to 4 screenshots. Get roasted. Fix it.
+    </p>
+
+    <div id="dropzone">
+      <input type="file" accept="image/*" id="fileInput" multiple />
+      <span class="drop-icon">📸</span>
+      <div class="drop-label">Drop LinkedIn screenshots here<br><span>or click to upload (max 4)</span></div>
+    </div>
+
+    <div id="preview-wrap">
+      <div class="preview-header">
+        <div><span id="preview-count">0</span>/4 screenshots</div>
+        <button id="clear-all-btn" type="button" onclick="clearAllImages()">Clear all</button>
+      </div>
+      <div id="preview-grid"></div>
+    </div>
+
+    <button id="roast-btn" onclick="startRoast()" disabled>
+      🔥 ROAST MY LINKEDIN
+    </button>
+
+    <p class="disclaimer">
+      We'll score your Clarity, Buzzwords, Impact, Positioning, and Visual presence.<br>
+      Results may be humbling. You asked for it.
+    </p>
+  </div>
+</div>
+
+<!-- ===================== LOADING ===================== -->
+<div class="screen" id="loading">
+  <div class="loading-bg"></div>
+  <div class="loading-content">
+    <div class="spinner-ring"></div>
+    <div class="loading-title">ANALYZING YOUR PROFILE</div>
+    <div id="thought-text">Initializing brutal honesty mode...</div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+  </div>
+</div>
+
+<!-- ===================== RESULTS ===================== -->
+<div class="screen" id="results-screen">
+  <div id="results">
+    <div class="results-header">
+      <div class="score-label">OVERALL SCORE</div>
+      <span class="overall-score" id="overall-score-val">—</span>
+      <div class="score-label" style="margin-top:8px">OUT OF 10</div>
+      <div class="verdict-box" style="margin-top:24px">
+        <div class="verdict-label">▶️ FINAL VERDICT</div>
+        <div class="verdict-text" id="verdict-text">...</div>
+      </div>
+    </div>
+
+    <div class="categories" id="cat-container"></div>
+
+    <div class="cta-row">
+      <button class="btn-share" onclick="shareResults()">📋 COPY RESULTS TO SHARE</button>
+      <button class="btn-retry" onclick="resetToLanding()">↩ ROAST ANOTHER</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────
+// ⚠️ Paste your Groq API key here. Get one at https://console.groq.com/keys
+// WARNING: Embedding API keys in client-side HTML exposes them publicly.
+// Only use this for local/personal testing, not for production deployment.
+
+const GROQ_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"; // vision-capable
+const MAX_IMAGES = 4;
+
+const TICKER_MSGS = [
+  "SYNERGY", "THOUGHT LEADER", "PASSIONATE ABOUT", "RESULTS-DRIVEN", 
+  "LEVERAGING", "DYNAMIC", "VISIONARY", "DETAIL-ORIENTED", "NINJA",
+  "GURU", "ROCKSTAR", "GAME-CHANGER", "DISRUPTIVE", "PIVOT"
+];
+
+const LOADING_THOUGHTS = [
+  "Counting buzzwords... already losing count.",
+  "Looking for your value proposition... crickets.",
+  "Checking if your photo looks like a LinkedIn stock photo...",
+  "Searching for quantifiable achievements... <em>still searching...</em>",
+  "Assessing whether a recruiter would click 'connect' or 'hide'...",
+  "Running the 6-second scan test... you failed.",
+  "Tallying generic adjectives: passionate, driven, results-oriented...",
+  "Evaluating if anyone knows what you actually do...",
+  "Cross-referencing with 10,000 identical profiles...",
+  "Compiling damage report..."
+];
+
+const CATEGORIES = [
+  { key: "clarity",     label: "CLARITY",     emoji: "👁",  desc: "6-second scan test" },
+  { key: "buzzwords",   label: "BUZZWORDS",   emoji: "🤮", desc: "cliché density" },
+  { key: "impact",      label: "IMPACT",      emoji: "📊", desc: "numbers & results" },
+  { key: "positioning", label: "POSITIONING", emoji: "🎯", desc: "what you do, instantly" },
+  { key: "visual",      label: "VISUAL",      emoji: "🖼",  desc: "photo, banner, format" },
+];
+
+// ─── TICKER ───────────────────────────────────────────
+const tickerInner = document.getElementById('tickerInner');
+const msgs = [...TICKER_MSGS, ...TICKER_MSGS].map(m => `<span>${m}</span>`).join(' &nbsp;·&nbsp; ');
+tickerInner.innerHTML = msgs + ' &nbsp;·&nbsp; ' + msgs;
+
+// ─── FILE HANDLING ─────────────────────────────────────
+let imageDataUrls = [];
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const previewWrap = document.getElementById('preview-wrap');
+const previewGrid = document.getElementById('preview-grid');
+const previewCount = document.getElementById('preview-count');
+const roastBtn = document.getElementById('roast-btn');
+
+fileInput.addEventListener('change', e => {
+  if (e.target.files?.length) handleFiles(e.target.files);
+  fileInput.value = '';
+});
+
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('drag-over');
+  if (e.dataTransfer.files?.length) handleFiles(e.dataTransfer.files);
+});
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = ev => resolve(ev.target.result);
+    reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleFiles(fileList) {
+  const imageFiles = Array.from(fileList).filter(file => file.type.startsWith('image/'));
+  if (!imageFiles.length) {
+    alert('Please upload image files only.');
+    return;
+  }
+
+  const remainingSlots = MAX_IMAGES - imageDataUrls.length;
+  if (remainingSlots <= 0) {
+    alert(`You can upload up to ${MAX_IMAGES} screenshots.`);
+    return;
+  }
+
+  const filesToAdd = imageFiles.slice(0, remainingSlots);
+  if (imageFiles.length > remainingSlots) {
+    alert(`Only ${remainingSlots} more screenshot${remainingSlots === 1 ? '' : 's'} can be added (max ${MAX_IMAGES}).`);
+  }
+
+  try {
+    const newDataUrls = await Promise.all(filesToAdd.map(readFileAsDataUrl));
+    imageDataUrls.push(...newDataUrls);
+    renderPreviews();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+function renderPreviews() {
+  previewCount.textContent = imageDataUrls.length;
+  previewWrap.style.display = imageDataUrls.length ? 'block' : 'none';
+  dropzone.classList.toggle('hidden', imageDataUrls.length >= MAX_IMAGES);
+  roastBtn.disabled = imageDataUrls.length === 0;
+
+  previewGrid.innerHTML = imageDataUrls.map((url, index) => `
+    <div class="preview-item">
+      <img src="${url}" alt="Screenshot ${index + 1}" />
+      <button class="preview-remove" type="button" onclick="removeImage(${index})" aria-label="Remove screenshot ${index + 1}">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeImage(index) {
+  imageDataUrls.splice(index, 1);
+  renderPreviews();
+}
+
+function clearAllImages() {
+  imageDataUrls = [];
+  fileInput.value = '';
+  renderPreviews();
+}
+
+// ─── SCREEN SWITCH ─────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ─── LOADING THOUGHTS ─────────────────────────────────
+let thoughtInterval;
+function startThoughts() {
+  let i = 0;
+  const el = document.getElementById('thought-text');
+  el.innerHTML = LOADING_THOUGHTS[0];
+  thoughtInterval = setInterval(() => {
+    i = (i + 1) % LOADING_THOUGHTS.length;
+    el.style.opacity = 0;
+    setTimeout(() => {
+      el.innerHTML = LOADING_THOUGHTS[i];
+      el.style.opacity = 1;
+    }, 400);
+  }, 2200);
+}
+function stopThoughts() { clearInterval(thoughtInterval); }
+
+// ─── SCORE HELPERS ─────────────────────────────────────
+function scoreClass(n) {
+  if (n <= 3) return 'terrible';
+  if (n <= 4) return 'bad';
+  if (n <= 5) return 'mid';
+  if (n <= 7) return 'ok';
+  return 'good';
+}
+
+function buildCatCard(cat, data) {
+  const sc = data.score;
+  const cls = scoreClass(sc);
+  return `
+    <div class="cat-card">
+      <div class="cat-header">
+        <div>
+          <div class="cat-name">${cat.emoji} ${cat.label} — ${cat.desc}</div>
+        </div>
+        <div class="cat-score-wrap">
+          <div class="score-bar"><div class="score-fill fill-${cls}" style="width:${sc*10}%" id="fill-${cat.key}"></div></div>
+          <div class="cat-score score-${cls}">${sc}</div>
+        </div>
+      </div>
+      <div class="cat-roast">"${data.roast}"</div>
+      <div class="cat-fix">
+        <span class="fix-icon">→</span>
+        <span class="fix-text">${data.fix}</span>
+      </div>
+    </div>`;
+}
+
+// ─── RENDER RESULTS ────────────────────────────────────
+function renderResults(data) {
+  const overall = data.overall_score ?? Math.round(
+    CATEGORIES.reduce((sum, c) => sum + (data[c.key]?.score || 0), 0) / CATEGORIES.length
+  );
+  const cls = scoreClass(overall);
+
+  const overallEl = document.getElementById('overall-score-val');
+  overallEl.textContent = overall;
+  overallEl.className = `overall-score score-${cls}`;
+
+  document.getElementById('verdict-text').textContent = data.verdict;
+
+  const container = document.getElementById('cat-container');
+  container.innerHTML = CATEGORIES.map(c => buildCatCard(c, data[c.key])).join('');
+
+  showScreen('results-screen');
+  document.getElementById('results-screen').scrollTop = 0;
+
+  // animate bars after render
+  setTimeout(() => {
+    document.querySelectorAll('.score-fill').forEach(el => {
+      // width already set in HTML, trigger reflow for animation
+      el.style.transition = 'width 1.2s cubic-bezier(0.4,0,0.2,1)';
+    });
+  }, 100);
+}
+
+// ─── API CALL ──────────────────────────────────────────
+async function callAPI(dataUrls) {
+  const response = await fetch('/api/roast', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ images: dataUrls }),
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || `API error: ${response.status}`);
+  }
+  return result;
+}
+// ─── MAIN FLOW ─────────────────────────────────────────
+async function startRoast() {
+  if (!imageDataUrls.length) return;
+  showScreen('loading');
+  startThoughts();
+
+  try {
+    const data = await callAPI(imageDataUrls);
+    stopThoughts();
+    renderResults(data);
+  } catch (err) {
+    stopThoughts();
+    showScreen('landing');
+    alert(`Something went wrong: ${err.message}\n\nCheck the browser console for details, and make sure your GROQ_API_KEY is set correctly inside the HTML file.`);
+    console.error(err);
+  }
+}
+
+// ─── SHARE ────────────────────────────────────────────
+let lastData = null;
+function shareResults() {
+  const verdict = document.getElementById('verdict-text').textContent;
+  const score = document.getElementById('overall-score-val').textContent;
+  const cats = CATEGORIES.map(c => {
+    const card = document.querySelectorAll('.cat-card');
+    return '';
+  });
+
+  const scores = Array.from(document.querySelectorAll('.cat-card')).map(card => {
+    const name = card.querySelector('.cat-name').textContent.trim().split('—')[0].trim();
+    const score = card.querySelector('.cat-score').textContent.trim();
+    return `${name}: ${score}/10`;
+  }).join('\n');
+
+  const text = `🔥 BRUTAL HONESTY BOT — LinkedIn Roast\n\nOverall Score: ${score}/10\n\n${scores}\n\nVerdict: "${verdict}"\n\n#LinkedInRoast #BrutalHonestyBot`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }).catch(() => alert(text));
+}
+
+function resetToLanding() {
+  clearAllImages();
+  showScreen('landing');
+}
+</script>
+</body>
+</html>
