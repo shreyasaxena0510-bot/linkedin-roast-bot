@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BRUTAL HONESTY BOT — LinkedIn Roaster</title>
+<title>BRUTAL HONESTY BOT — LinkedIn, Resume & Content</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -230,6 +230,198 @@
     font-family: 'Space Mono', monospace;
     margin-top: 16px;
     line-height: 1.6;
+  }
+
+  /* MODE TABS */
+  .mode-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .mode-tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 10px 14px;
+    border: 1px solid #444;
+    background: transparent;
+    color: var(--dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .mode-tab:hover { border-color: var(--white); color: var(--white); }
+  .mode-tab.active {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(255,225,53,0.08);
+  }
+
+  .analytics-notes {
+    display: none;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .analytics-notes.visible { display: block; }
+  .analytics-notes label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+  .analytics-notes textarea {
+    width: 100%;
+    min-height: 88px;
+    padding: 14px;
+    background: var(--gray);
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+  .analytics-notes textarea:focus {
+    outline: none;
+    border-color: var(--yellow);
+  }
+  .analytics-notes .hint {
+    font-size: 11px;
+    color: #555;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* POST IDEAS RESULTS */
+  .insights-box {
+    background: var(--gray);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  .insights-box h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    margin-bottom: 10px;
+  }
+  .insights-box p, .insights-box li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--white);
+  }
+  .insights-box ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .insights-box li::before { content: '→ '; color: var(--red); }
+
+  .idea-card {
+    background: var(--gray);
+    padding: 24px;
+    margin-bottom: 2px;
+    text-align: left;
+  }
+  .idea-rank {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .idea-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    color: var(--yellow);
+  }
+  .idea-hook {
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    color: var(--white);
+  }
+  .idea-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--dim);
+  }
+  .idea-meta strong { color: var(--white); font-weight: 500; }
+  .idea-format {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border: 1px solid #444;
+    color: var(--yellow);
+  }
+
+  .results-view { display: none; }
+  .results-view.active { display: block; }
+
+  .upload-tips {
+    text-align: left;
+    background: var(--gray);
+    border: 1px solid #333;
+    border-left: 3px solid var(--yellow);
+    padding: 16px 18px;
+    margin-bottom: 20px;
+  }
+  .upload-tips h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    margin-bottom: 12px;
+  }
+  .upload-tips .tips-section {
+    margin-bottom: 12px;
+  }
+  .upload-tips .tips-section:last-child { margin-bottom: 0; }
+  .upload-tips .tips-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--dim);
+    margin-bottom: 6px;
+  }
+  .upload-tips ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .upload-tips li {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--white);
+    padding-left: 14px;
+    position: relative;
+  }
+  .upload-tips li.tip-good::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #4ade80;
+    font-size: 10px;
+  }
+  .upload-tips li.tip-bad::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-size: 10px;
   }
 
   /* ---- LOADING ---- */
@@ -512,30 +704,44 @@
       <span class="line2">HONESTYY</span>
       <span class="line3">BOT</span>
     </h1>
-    <p class="subhead">
+    <p class="subhead" id="subhead">
       Your LinkedIn profile is <strong>not as good as you think.</strong><br>
       Upload up to 4 screenshots. Get roasted. Fix it.
     </p>
 
+    <div class="mode-tabs" role="tablist">
+      <button type="button" class="mode-tab active" data-mode="linkedin" onclick="setMode('linkedin')">LinkedIn</button>
+      <button type="button" class="mode-tab" data-mode="resume" onclick="setMode('resume')">Resume</button>
+      <button type="button" class="mode-tab" data-mode="analytics" onclick="setMode('analytics')">Post ideas</button>
+    </div>
+
+    <div class="upload-tips" id="upload-tips"></div>
+
+    <div class="analytics-notes" id="analytics-notes">
+      <label for="notesInput">OPTIONAL ANALYTICS NOTES</label>
+      <textarea id="notesInput" placeholder="Paste top post titles, engagement rates, audience job titles, industries, or any metrics not visible in screenshots..."></textarea>
+      <p class="hint">Upload analytics screenshots below. Notes help if stats are hard to read in images.</p>
+    </div>
+
     <div id="dropzone">
       <input type="file" accept="image/*" id="fileInput" multiple />
-      <span class="drop-icon">📸</span>
-      <div class="drop-label">Drop LinkedIn screenshots here<br><span>or click to upload (max 4)</span></div>
+      <span class="drop-icon" id="drop-icon">📸</span>
+      <div class="drop-label" id="drop-label">Drop LinkedIn screenshots here<br><span>or click to upload (max 4)</span></div>
     </div>
 
     <div id="preview-wrap">
       <div class="preview-header">
-        <div><span id="preview-count">0</span>/4 screenshots</div>
+        <div><span id="preview-count">0</span><span id="preview-suffix">/4 screenshots</span></div>
         <button id="clear-all-btn" type="button" onclick="clearAllImages()">Clear all</button>
       </div>
       <div id="preview-grid"></div>
     </div>
 
-    <button id="roast-btn" onclick="startRoast()" disabled>
+    <button id="roast-btn" onclick="startAnalysis()" disabled>
       🔥 ROAST MY LINKEDIN
     </button>
 
-    <p class="disclaimer">
+    <p class="disclaimer" id="disclaimer">
       We'll score your Clarity, Buzzwords, Impact, Positioning, and Visual presence.<br>
       Results may be humbling. You asked for it.
     </p>
@@ -547,7 +753,7 @@
   <div class="loading-bg"></div>
   <div class="loading-content">
     <div class="spinner-ring"></div>
-    <div class="loading-title">ANALYZING YOUR PROFILE</div>
+    <div class="loading-title" id="loading-title">ANALYZING YOUR PROFILE</div>
     <div id="thought-text">Initializing brutal honesty mode...</div>
     <div class="progress-bar"><div class="progress-fill"></div></div>
   </div>
@@ -556,21 +762,34 @@
 <!-- ===================== RESULTS ===================== -->
 <div class="screen" id="results-screen">
   <div id="results">
-    <div class="results-header">
-      <div class="score-label">OVERALL SCORE</div>
-      <span class="overall-score" id="overall-score-val">—</span>
-      <div class="score-label" style="margin-top:8px">OUT OF 10</div>
-      <div class="verdict-box" style="margin-top:24px">
-        <div class="verdict-label">▶️ FINAL VERDICT</div>
-        <div class="verdict-text" id="verdict-text">...</div>
+    <div id="results-roast" class="results-view">
+      <div class="results-header">
+        <div class="score-label">OVERALL SCORE</div>
+        <span class="overall-score" id="overall-score-val">—</span>
+        <div class="score-label" style="margin-top:8px">OUT OF 10</div>
+        <div class="verdict-box" style="margin-top:24px">
+          <div class="verdict-label">▶️ FINAL VERDICT</div>
+          <div class="verdict-text" id="verdict-text">...</div>
+        </div>
       </div>
+      <div class="categories" id="cat-container"></div>
     </div>
 
-    <div class="categories" id="cat-container"></div>
+    <div id="results-ideas" class="results-view">
+      <div class="results-header">
+        <div class="score-label">CONTENT STRATEGY</div>
+        <div class="verdict-box">
+          <div class="verdict-label">▶️ STRATEGIC TAKEAWAY</div>
+          <div class="verdict-text" id="ideas-verdict">...</div>
+        </div>
+      </div>
+      <div id="ideas-insights"></div>
+      <div id="ideas-list"></div>
+    </div>
 
     <div class="cta-row">
       <button class="btn-share" onclick="shareResults()">📋 COPY RESULTS TO SHARE</button>
-      <button class="btn-retry" onclick="resetToLanding()">↩ ROAST ANOTHER</button>
+      <button class="btn-retry" onclick="resetToLanding()">↩ TRY ANOTHER</button>
     </div>
   </div>
 </div>
@@ -578,40 +797,131 @@
 <div class="toast" id="toast">Copied to clipboard!</div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────
-// ⚠️ Paste your Groq API key here. Get one at https://console.groq.com/keys
-// WARNING: Embedding API keys in client-side HTML exposes them publicly.
-// Only use this for local/personal testing, not for production deployment.
-
-const GROQ_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"; // vision-capable
 const MAX_IMAGES = 4;
+const MAX_IMAGE_DIMENSION = 1400;
+const JPEG_QUALITY = 0.82;
+const MAX_PAYLOAD_BYTES = 3.5 * 1024 * 1024;
+let currentMode = 'linkedin';
+let lastResultData = null;
+let lastResultMode = null;
 
 const TICKER_MSGS = [
-  "SYNERGY", "THOUGHT LEADER", "PASSIONATE ABOUT", "RESULTS-DRIVEN", 
+  "SYNERGY", "THOUGHT LEADER", "PASSIONATE ABOUT", "RESULTS-DRIVEN",
   "LEVERAGING", "DYNAMIC", "VISIONARY", "DETAIL-ORIENTED", "NINJA",
-  "GURU", "ROCKSTAR", "GAME-CHANGER", "DISRUPTIVE", "PIVOT"
+  "GURU", "ROCKSTAR", "GAME-CHANGER", "DISRUPTIVE", "PIVOT",
+  "OPEN TO WORK", "EXCITED TO ANNOUNCE", "HUMBLE BRAG", "AGILE"
 ];
 
-const LOADING_THOUGHTS = [
-  "Counting buzzwords... already losing count.",
-  "Looking for your value proposition... crickets.",
-  "Checking if your photo looks like a LinkedIn stock photo...",
-  "Searching for quantifiable achievements... <em>still searching...</em>",
-  "Assessing whether a recruiter would click 'connect' or 'hide'...",
-  "Running the 6-second scan test... you failed.",
-  "Tallying generic adjectives: passionate, driven, results-oriented...",
-  "Evaluating if anyone knows what you actually do...",
-  "Cross-referencing with 10,000 identical profiles...",
-  "Compiling damage report..."
-];
-
-const CATEGORIES = [
-  { key: "clarity",     label: "CLARITY",     emoji: "👁",  desc: "6-second scan test" },
-  { key: "buzzwords",   label: "BUZZWORDS",   emoji: "🤮", desc: "cliché density" },
-  { key: "impact",      label: "IMPACT",      emoji: "📊", desc: "numbers & results" },
-  { key: "positioning", label: "POSITIONING", emoji: "🎯", desc: "what you do, instantly" },
-  { key: "visual",      label: "VISUAL",      emoji: "🖼",  desc: "photo, banner, format" },
-];
+const MODES = {
+  linkedin: {
+    endpoint: '/api/roast',
+    resultType: 'score',
+    dropIcon: '📸',
+    dropLabel: 'Drop LinkedIn screenshots here<br><span>or click to upload (max 4)</span>',
+    previewUnit: 'screenshots',
+    btnText: '🔥 ROAST MY LINKEDIN',
+    subhead: 'Your LinkedIn profile is <strong>not as good as you think.</strong><br>Upload up to 4 screenshots. Get roasted. Fix it.',
+    disclaimer: "We'll score your Clarity, Buzzwords, Impact, Positioning, and Visual presence.<br>Results may be humbling. You asked for it.",
+    uploadIdeal: [
+      'Profile header — photo, banner, headline, location',
+      'About section — full summary, readable text',
+      'Experience — 1–2 recent roles with bullets',
+      'Optional: Featured or recent activity',
+    ],
+    uploadAvoid: [
+      'Resumes, analytics dashboards, or other social apps',
+      'Memes, selfies, or blurry unreadable crops',
+    ],
+    loadingTitle: 'ANALYZING YOUR PROFILE',
+    shareTitle: 'LinkedIn Roast',
+    thoughts: [
+      "Counting buzzwords... already losing count.",
+      "Looking for your value proposition... crickets.",
+      "Checking if your photo looks like a LinkedIn stock photo...",
+      "Searching for quantifiable achievements... <em>still searching...</em>",
+      "Assessing whether a recruiter would click 'connect' or 'hide'...",
+      "Running the 6-second scan test... you failed.",
+      "Compiling damage report..."
+    ],
+    categories: [
+      { key: 'clarity', label: 'CLARITY', emoji: '👁', desc: '6-second scan test' },
+      { key: 'buzzwords', label: 'BUZZWORDS', emoji: '🤮', desc: 'cliché density' },
+      { key: 'impact', label: 'IMPACT', emoji: '📊', desc: 'numbers & results' },
+      { key: 'positioning', label: 'POSITIONING', emoji: '🎯', desc: 'what you do, instantly' },
+      { key: 'visual', label: 'VISUAL', emoji: '🖼', desc: 'photo, banner, format' },
+    ],
+  },
+  resume: {
+    endpoint: '/api/roast-resume',
+    resultType: 'score',
+    dropIcon: '📄',
+    dropLabel: 'Drop resume screenshots here<br><span>PDF pages as images — max 4</span>',
+    previewUnit: 'pages',
+    btnText: '🔥 ROAST MY RESUME',
+    subhead: 'Your resume is <strong>not surviving ATS or recruiters.</strong><br>Upload up to 4 pages. Get roasted. Rewrite it.',
+    disclaimer: "We'll score Formatting, Impact, Clarity, ATS keywords, Experience bullets, and Brevity.<br>Recruiters spend 6 seconds. Yours might get 2.",
+    uploadIdeal: [
+      'Page 1 — name, title, summary, latest role',
+      'Experience pages — bullets, dates, companies',
+      'Skills, certifications, or education',
+      'Extra page if experience continues',
+    ],
+    uploadAvoid: [
+      'LinkedIn profiles or analytics charts',
+      'Cover letter only, memes, or unrelated docs',
+    ],
+    loadingTitle: 'SHREDDING YOUR RESUME',
+    shareTitle: 'Resume Roast',
+    thoughts: [
+      "Scanning for quantified achievements... found vibes instead.",
+      "Checking if 'Responsible for' appears more than once...",
+      "Running ATS keyword match... <em>ouch.</em>",
+      "Measuring white space vs. substance ratio...",
+      "Looking for a clear headline... still looking.",
+      "Counting buzzwords per bullet point...",
+      "Preparing recruiter rejection simulation..."
+    ],
+    categories: [
+      { key: 'formatting', label: 'FORMATTING', emoji: '📐', desc: 'layout & scanability' },
+      { key: 'impact', label: 'IMPACT', emoji: '📊', desc: 'metrics & outcomes' },
+      { key: 'clarity', label: 'CLARITY', emoji: '👁', desc: 'role & level obvious' },
+      { key: 'ats_keywords', label: 'ATS KEYWORDS', emoji: '🤖', desc: 'searchability' },
+      { key: 'experience', label: 'EXPERIENCE', emoji: '💼', desc: 'bullet quality' },
+      { key: 'brevity', label: 'BREVITY', emoji: '✂️', desc: 'density vs. fluff' },
+    ],
+  },
+  analytics: {
+    endpoint: '/api/post-ideas',
+    resultType: 'ideas',
+    dropIcon: '📈',
+    dropLabel: 'Drop LinkedIn analytics screenshots<br><span>audience, posts, impressions — max 4</span>',
+    previewUnit: 'screenshots',
+    btnText: '💡 SUGGEST MY NEXT POSTS',
+    subhead: 'Upload your <strong>LinkedIn analytics.</strong><br>We read your audience and tell you what to post next.',
+    disclaimer: 'Upload Creator analytics: audience demographics, top posts, impressions, engagement.<br>Optional notes help if numbers are tiny in screenshots.',
+    uploadIdeal: [
+      'Audience demographics — titles, industries, locations',
+      'Post performance — impressions, engagement, top posts',
+      'Content or growth analytics over time',
+      'Creator / Page admin stats (not About section)',
+    ],
+    uploadAvoid: [
+      'Profile About/Experience screenshots',
+      'Resume pages or single posts with no metrics',
+    ],
+    loadingTitle: 'READING YOUR ANALYTICS',
+    shareTitle: 'Post Ideas',
+    thoughts: [
+      "Mapping who actually engages with your content...",
+      "Finding your top-performing post patterns...",
+      "Spotting content gaps your audience wants filled...",
+      "Matching hooks to follower job titles...",
+      "Ranking ideas by predicted engagement...",
+      "Drafting posts your analytics are begging for..."
+    ],
+    categories: [],
+  },
+};
 
 // ─── TICKER ───────────────────────────────────────────
 const tickerInner = document.getElementById('tickerInner');
@@ -649,6 +959,37 @@ function readFileAsDataUrl(file) {
   });
 }
 
+function compressImage(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      const maxDim = MAX_IMAGE_DIMENSION;
+      if (width > maxDim || height > maxDim) {
+        if (width >= height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY));
+    };
+    img.onerror = () => reject(new Error('Could not process image'));
+    img.src = dataUrl;
+  });
+}
+
+function estimatePayloadBytes() {
+  return new Blob([JSON.stringify({ images: imageDataUrls })]).size;
+}
+
 async function handleFiles(fileList) {
   const imageFiles = Array.from(fileList).filter(file => file.type.startsWith('image/'));
   if (!imageFiles.length) {
@@ -668,8 +1009,9 @@ async function handleFiles(fileList) {
   }
 
   try {
-    const newDataUrls = await Promise.all(filesToAdd.map(readFileAsDataUrl));
-    imageDataUrls.push(...newDataUrls);
+    const rawUrls = await Promise.all(filesToAdd.map(readFileAsDataUrl));
+    const compressed = await Promise.all(rawUrls.map(compressImage));
+    imageDataUrls.push(...compressed);
     renderPreviews();
   } catch (err) {
     alert(err.message);
@@ -677,7 +1019,9 @@ async function handleFiles(fileList) {
 }
 
 function renderPreviews() {
+  const unit = MODES[currentMode].previewUnit;
   previewCount.textContent = imageDataUrls.length;
+  document.getElementById('preview-suffix').textContent = `/4 ${unit}`;
   previewWrap.style.display = imageDataUrls.length ? 'block' : 'none';
   dropzone.classList.toggle('hidden', imageDataUrls.length >= MAX_IMAGES);
   roastBtn.disabled = imageDataUrls.length === 0;
@@ -707,17 +1051,60 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
+// ─── MODE UI ───────────────────────────────────────────
+function renderUploadTips() {
+  const cfg = MODES[currentMode];
+  const ideal = cfg.uploadIdeal.map(t => `<li class="tip-good">${escapeHtml(t)}</li>`).join('');
+  const avoid = cfg.uploadAvoid.map(t => `<li class="tip-bad">${escapeHtml(t)}</li>`).join('');
+  document.getElementById('upload-tips').innerHTML = `
+    <h4>WHAT TO UPLOAD FOR A REAL ROAST</h4>
+    <div class="tips-section">
+      <div class="tips-label">IDEAL SCREENSHOTS</div>
+      <ul>${ideal}</ul>
+    </div>
+    <div class="tips-section">
+      <div class="tips-label">WILL BE REJECTED</div>
+      <ul>${avoid}</ul>
+    </div>`;
+}
+
+function setMode(mode) {
+  if (!MODES[mode]) return;
+  const changed = mode !== currentMode;
+  currentMode = mode;
+  if (changed) {
+    clearAllImages();
+    document.getElementById('notesInput').value = '';
+  }
+
+  document.querySelectorAll('.mode-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.mode === mode);
+  });
+  document.getElementById('analytics-notes').classList.toggle('visible', mode === 'analytics');
+
+  const cfg = MODES[mode];
+  document.getElementById('preview-suffix').textContent = `/4 ${cfg.previewUnit}`;
+  document.getElementById('subhead').innerHTML = cfg.subhead;
+  document.getElementById('disclaimer').innerHTML = cfg.disclaimer;
+  document.getElementById('drop-icon').textContent = cfg.dropIcon;
+  document.getElementById('drop-label').innerHTML = cfg.dropLabel;
+  roastBtn.textContent = cfg.btnText;
+  renderUploadTips();
+}
+
 // ─── LOADING THOUGHTS ─────────────────────────────────
 let thoughtInterval;
 function startThoughts() {
+  const thoughts = MODES[currentMode].thoughts;
   let i = 0;
   const el = document.getElementById('thought-text');
-  el.innerHTML = LOADING_THOUGHTS[0];
+  document.getElementById('loading-title').textContent = MODES[currentMode].loadingTitle;
+  el.innerHTML = thoughts[0];
   thoughtInterval = setInterval(() => {
-    i = (i + 1) % LOADING_THOUGHTS.length;
+    i = (i + 1) % thoughts.length;
     el.style.opacity = 0;
     setTimeout(() => {
-      el.innerHTML = LOADING_THOUGHTS[i];
+      el.innerHTML = thoughts[i];
       el.style.opacity = 1;
     }, 400);
   }, 2200);
@@ -734,6 +1121,13 @@ function scoreClass(n) {
 }
 
 function buildCatCard(cat, data) {
+  if (!data || data.score == null) {
+    return `
+    <div class="cat-card">
+      <div class="cat-name">${cat.emoji} ${cat.label}</div>
+      <div class="cat-roast">No feedback returned for this category.</div>
+    </div>`;
+  }
   const sc = data.score;
   const cls = scoreClass(sc);
   return `
@@ -756,50 +1150,162 @@ function buildCatCard(cat, data) {
 }
 
 // ─── RENDER RESULTS ────────────────────────────────────
-function renderResults(data) {
+function renderScoreResults(data) {
+  const categories = MODES[lastResultMode].categories;
   const overall = data.overall_score ?? Math.round(
-    CATEGORIES.reduce((sum, c) => sum + (data[c.key]?.score || 0), 0) / CATEGORIES.length
+    categories.reduce((sum, c) => sum + (data[c.key]?.score || 0), 0) / categories.length
   );
   const cls = scoreClass(overall);
 
   const overallEl = document.getElementById('overall-score-val');
   overallEl.textContent = overall;
   overallEl.className = `overall-score score-${cls}`;
-
   document.getElementById('verdict-text').textContent = data.verdict;
 
-  const container = document.getElementById('cat-container');
-  container.innerHTML = CATEGORIES.map(c => buildCatCard(c, data[c.key])).join('');
+  document.getElementById('cat-container').innerHTML =
+    categories.map(c => buildCatCard(c, data[c.key])).join('');
 
-  showScreen('results-screen');
-  document.getElementById('results-screen').scrollTop = 0;
+  document.getElementById('results-roast').classList.add('active');
+  document.getElementById('results-ideas').classList.remove('active');
 
-  // animate bars after render
   setTimeout(() => {
     document.querySelectorAll('.score-fill').forEach(el => {
-      // width already set in HTML, trigger reflow for animation
       el.style.transition = 'width 1.2s cubic-bezier(0.4,0,0.2,1)';
     });
   }, 100);
 }
 
-// ─── API CALL ──────────────────────────────────────────
-async function callAPI(dataUrls) {
-  const response = await fetch('/api/roast', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ images: dataUrls }),
-  });
+function renderIdeasResults(data) {
+  document.getElementById('ideas-verdict').textContent = data.verdict || '';
 
-  const result = await response.json();
+  const insights = document.getElementById('ideas-insights');
+  const insightsList = (data.top_insights || []).map(i => `<li>${escapeHtml(i)}</li>`).join('');
+  insights.innerHTML = `
+    <div class="insights-box">
+      <h3>👥 YOUR AUDIENCE</h3>
+      <p>${escapeHtml(data.audience_summary || '')}</p>
+    </div>
+    <div class="insights-box">
+      <h3>📊 WHAT THE DATA SAYS</h3>
+      <ul>${insightsList}</ul>
+    </div>
+    <div class="insights-box">
+      <h3>🕳 CONTENT GAP</h3>
+      <p>${escapeHtml(data.content_gaps || '')}</p>
+    </div>`;
+
+  document.getElementById('ideas-list').innerHTML = (data.post_ideas || []).map((idea, i) => `
+    <div class="idea-card">
+      <div class="idea-rank">POST IDEA #${i + 1}</div>
+      <div class="idea-title">${escapeHtml(idea.title || 'Untitled')}</div>
+      <div class="idea-hook">"${escapeHtml(idea.hook || '')}"</div>
+      <div class="idea-meta">
+        <strong>Angle:</strong> ${escapeHtml(idea.angle || '')}<br><br>
+        <strong>Why it works:</strong> ${escapeHtml(idea.why_it_works || '')}
+      </div>
+      <span class="idea-format">${escapeHtml((idea.format || 'text').toUpperCase())}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('results-roast').classList.remove('active');
+  document.getElementById('results-ideas').classList.add('active');
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderResults(data) {
+  lastResultData = data;
+  lastResultMode = currentMode;
+  const cfg = MODES[currentMode];
+
+  if (cfg.resultType === 'ideas') {
+    renderIdeasResults(data);
+  } else {
+    renderScoreResults(data);
+  }
+
+  showScreen('results-screen');
+  document.getElementById('results-screen').scrollTop = 0;
+}
+
+// ─── API CALL ──────────────────────────────────────────
+function formatApiError(status, result, fallback) {
+  if (result?.code === 'missing_api_key') {
+    return `${result.error}\n\n${result.hint || 'Add GOOGLE_API_KEY to .env.local and restart vercel dev.'}`;
+  }
+  if (status === 401 || status === 403) {
+    return 'Invalid GOOGLE_API_KEY. Get a key at https://aistudio.google.com/apikey and update .env.local / Vercel env vars.';
+  }
+  if (status === 413) {
+    return 'Upload too large. Use fewer screenshots (max 4) or smaller images.';
+  }
+  if (status === 429) {
+    return result?.error || 'API limit or model error. Set GEMINI_MODEL=gemini-2.5-flash in .env.local (not gemini-1.5-flash-lite — that ID does not exist). Wait a minute and retry.';
+  }
+  if (status === 502) {
+    return result?.error || 'The AI returned an invalid response. Please try again.';
+  }
+  return result?.error || fallback;
+}
+
+async function callAPI(dataUrls) {
+  const cfg = MODES[currentMode];
+  const body = { images: dataUrls };
+  if (currentMode === 'analytics') {
+    body.notes = document.getElementById('notesInput').value;
+  }
+
+  const payload = JSON.stringify(body);
+  if (payload.length > MAX_PAYLOAD_BYTES) {
+    throw new Error('Screenshots are still too large after compression. Remove one image or use smaller crops.');
+  }
+
+  let response;
+  try {
+    response = await fetch(cfg.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+    });
+  } catch {
+    throw new Error('Could not reach the server. Run `vercel dev` and open http://localhost:3000 (not the HTML file directly).');
+  }
+
+  const raw = await response.text();
+  let result;
+  try {
+    result = raw ? JSON.parse(raw) : {};
+  } catch {
+    throw new Error(
+      response.status === 413
+        ? 'Upload too large for the server. Try 1–2 screenshots instead of 4.'
+        : `Server error (${response.status}). Restart vercel dev and try again.`
+    );
+  }
+
   if (!response.ok) {
-    throw new Error(result.error || `API error: ${response.status}`);
+    const err = new Error(formatApiError(response.status, result, `API error: ${response.status}`));
+    err.apiResult = result;
+    throw err;
   }
   return result;
 }
+
 // ─── MAIN FLOW ─────────────────────────────────────────
-async function startRoast() {
+async function startAnalysis() {
   if (!imageDataUrls.length) return;
+
+  if (estimatePayloadBytes() > MAX_PAYLOAD_BYTES) {
+    alert('Screenshots are too large. Remove one or re-upload — we compress automatically but 4 full-screen shots can still exceed the limit.');
+    return;
+  }
+
   showScreen('loading');
   startThoughts();
 
@@ -810,28 +1316,34 @@ async function startRoast() {
   } catch (err) {
     stopThoughts();
     showScreen('landing');
-    alert(`Something went wrong: ${err.message}\n\nCheck the browser console for details, and make sure your GROQ_API_KEY is set correctly inside the HTML file.`);
-    console.error(err);
+    alert(err.message || 'Something went wrong. See the browser console for details.');
+    console.error('Analysis failed:', err.apiResult || err);
   }
 }
 
+renderUploadTips();
+
 // ─── SHARE ────────────────────────────────────────────
-let lastData = null;
 function shareResults() {
-  const verdict = document.getElementById('verdict-text').textContent;
-  const score = document.getElementById('overall-score-val').textContent;
-  const cats = CATEGORIES.map(c => {
-    const card = document.querySelectorAll('.cat-card');
-    return '';
-  });
+  if (!lastResultData) return;
+  const cfg = MODES[lastResultMode];
+  let text;
 
-  const scores = Array.from(document.querySelectorAll('.cat-card')).map(card => {
-    const name = card.querySelector('.cat-name').textContent.trim().split('—')[0].trim();
-    const score = card.querySelector('.cat-score').textContent.trim();
-    return `${name}: ${score}/10`;
-  }).join('\n');
-
-  const text = `🔥 BRUTAL HONESTY BOT — LinkedIn Roast\n\nOverall Score: ${score}/10\n\n${scores}\n\nVerdict: "${verdict}"\n\n#LinkedInRoast #BrutalHonestyBot`;
+  if (cfg.resultType === 'ideas') {
+    const ideas = (lastResultData.post_ideas || []).map((idea, i) =>
+      `${i + 1}. ${idea.title}\n   Hook: "${idea.hook}"\n   Format: ${idea.format}`
+    ).join('\n\n');
+    text = `💡 BRUTAL HONESTY BOT — ${cfg.shareTitle}\n\n${lastResultData.verdict}\n\nAudience: ${lastResultData.audience_summary}\n\nNext posts:\n${ideas}\n\n#LinkedInContent #BrutalHonestyBot`;
+  } else {
+    const categories = cfg.categories;
+    const overall = document.getElementById('overall-score-val').textContent;
+    const verdict = document.getElementById('verdict-text').textContent;
+    const scores = categories.map(c => {
+      const d = lastResultData[c.key];
+      return d ? `${c.label}: ${d.score}/10` : '';
+    }).filter(Boolean).join('\n');
+    text = `🔥 BRUTAL HONESTY BOT — ${cfg.shareTitle}\n\nOverall Score: ${overall}/10\n\n${scores}\n\nVerdict: "${verdict}"\n\n#BrutalHonestyBot`;
+  }
 
   navigator.clipboard.writeText(text).then(() => {
     const toast = document.getElementById('toast');
@@ -842,6 +1354,10 @@ function shareResults() {
 
 function resetToLanding() {
   clearAllImages();
+  document.getElementById('notesInput').value = '';
+  document.getElementById('results-roast').classList.remove('active');
+  document.getElementById('results-ideas').classList.remove('active');
+  lastResultData = null;
   showScreen('landing');
 }
 </script>

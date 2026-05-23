@@ -1,4 +1,5 @@
 {
-    "name": "linkedin-roaster",
-    "private": true
-  }
+  "name": "linkedin-roaster",
+  "private": true,
+  "type": "module"
+}
