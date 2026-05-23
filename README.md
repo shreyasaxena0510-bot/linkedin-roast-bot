@@ -1,5 +1,7 @@
 # Brutal Honesty Bot
 
+**Live app:** [linkedin-roast-bot-green.vercel.app](https://linkedin-roast-bot-green.vercel.app/)
+
 A screenshot-powered career roast and content coach. Upload LinkedIn profile shots, resume pages, or analytics dashboards and get blunt AI feedback — scores, roasts, fixes, or post ideas tailored to your audience.
 
 Built as a static frontend + Vercel serverless API, powered by **Google Gemini** vision models.
